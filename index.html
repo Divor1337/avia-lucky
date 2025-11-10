@@ -1,75 +1,178 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>LuckyBear | Играть сейчас</title>
-  <link rel="icon" href="https://luckybear.fun//_next/static/media/home_logo.a028b260.png">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Испытай удачу</title>
+
+  <!-- Предзагрузка -->
+  <link rel="preload" href="fonts/BenzinBold.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="video/promo.mp4" as="video" type="video/mp4">
+  <link rel="preload" href="images/preview.png" as="image">
+
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Segoe UI', sans-serif;
-      -webkit-tap-highlight-color: transparent;
+    @font-face {
+      font-family: "BenzinBold";
+      src: url("fonts/BenzinBold.woff2") format("woff2");
+      font-weight: 700;
+      font-style: normal;
+      font-display: swap;
     }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
-      background: radial-gradient(circle at top, #001a33, #000814);
-      color: white;
+      background: radial-gradient(circle at 30% 20%, #23254d 0%, #0e1124 60%);
+      color: #fff;
+      font-family: "Inter", sans-serif;
+      text-align: center;
+      overflow-x: hidden;
+      min-height: 100vh;
       display: flex;
-      flex-direction: column;
       justify-content: center;
       align-items: center;
-      min-height: 100vh;
-      text-align: center;
+      flex-direction: column;
+      padding: 20px;
+    }
+
+    /* Прелоадер */
+    #preloader {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at 30% 20%, #23254d 0%, #0e1124 70%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      z-index: 100;
+      transition: opacity 0.6s ease, visibility 0.6s ease;
+    }
+
+    #preloader.hidden {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    .plane {
+      width: 100px;
+      height: 100px;
+      background: url("images/preview.png") no-repeat center / contain;
+      animation: fly 2.5s ease-in-out infinite;
+    }
+
+    @keyframes fly {
+      0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+      50% { transform: translateY(-10px) rotate(2deg); opacity: 0.9; }
+      100% { transform: translateY(0) rotate(0deg); opacity: 1; }
+    }
+
+    .loading-text {
+      font-family: "BenzinBold", sans-serif;
+      font-size: 22px;
+      margin-top: 20px;
+      background: linear-gradient(135deg, #ffe176, #ff5858);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0%,100% {opacity: 1;}
+      50% {opacity: 0.5;}
+    }
+
+    .container {
+      width: 100%;
+      max-width: 480px;
+      display: none;
+    }
+
+    .container.visible {
+      display: block;
+    }
+
+    .video-section {
+      position: relative;
+      border-radius: 20px;
       overflow: hidden;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(15px);
     }
 
-    img {
-      width: 55vw;
-      max-width: 220px;
-      min-width: 140px;
-      margin-bottom: 50px;
-      animation: fadeIn 1.5s ease;
+    video {
+      width: 100%;
+      height: auto;
+      border-radius: 20px;
+      display: block;
+      object-fit: cover;
+      background-color: #000;
     }
 
-    .play-btn {
-      background: linear-gradient(90deg, #007bff, #0055cc);
+    .play-button {
+      margin-top: 25px;
+      background: linear-gradient(135deg, #ff7b00, #ff2d55);
       color: white;
-      border: none;
-      padding: 18px 70px;
-      font-size: 1.4em;
+      font-family: "BenzinBold", "Inter", sans-serif;
+      font-size: clamp(16px, 5vw, 20px);
+      padding: 16px 40px;
       border-radius: 50px;
+      border: none;
       cursor: pointer;
-      transition: 0.3s;
-      box-shadow: 0 0 20px rgba(0, 123, 255, 0.4);
-      width: 80%;
+      box-shadow: 0 6px 18px rgba(255, 90, 0, 0.5);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      animation: pulse 2s infinite;
+      width: 100%;
       max-width: 320px;
     }
 
-    .play-btn:active {
-      transform: scale(0.97);
+    .play-button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 12px 25px rgba(255, 125, 0, 0.6);
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(-20px); }
-      to { opacity: 1; transform: translateY(0); }
+    h2 {
+      font-family: "BenzinBold", "Inter", sans-serif;
+      font-size: clamp(22px, 5vw, 28px);
+      margin-top: 45px;
+      background: linear-gradient(135deg, #ffe176, #ff5858);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: 1px;
     }
 
+    .tg-button {
+      margin-top: 20px;
+      display: inline-block;
+      padding: 14px 30px;
+      font-family: "BenzinBold", "Inter", sans-serif;
+      background: linear-gradient(135deg, #00b7ff, #007fff);
+      color: #fff;
+      border-radius: 50px;
+      text-decoration: none;
+      font-size: clamp(16px, 4.5vw, 18px);
+      box-shadow: 0 6px 18px rgba(0, 183, 255, 0.4);
+      transition: all 0.3s ease;
+      width: 100%;
+      max-width: 300px;
+    }
+
+    .tg-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 35px rgba(0, 183, 255, 0.6);
+    }
+
+    /* Popup */
     .popup {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.75);
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.85);
       display: flex;
-      justify-content: center;
       align-items: center;
+      justify-content: center;
       visibility: hidden;
       opacity: 0;
-      transition: 0.3s ease;
+      transition: opacity 0.4s ease, visibility 0.4s ease;
       z-index: 10;
       padding: 20px;
     }
@@ -80,153 +183,104 @@
     }
 
     .popup-content {
-      background: #001f3d;
-      padding: 25px;
-      border-radius: 14px;
-      text-align: center;
-      box-shadow: 0 0 40px rgba(0, 123, 255, 0.5);
-      width: 90%;
-      max-width: 360px;
-      animation: fadeIn 0.4s ease;
-    }
-
-    .popup h2 {
-      font-size: 1.2em;
-      margin-bottom: 20px;
-      color: #fff;
-      line-height: 1.4em;
-    }
-
-    .popup-buttons {
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-    }
-
-    .popup button {
-      background: linear-gradient(90deg, #007bff, #0055cc);
-      border: none;
-      color: white;
-      padding: 14px 25px;
-      border-radius: 10px;
-      font-size: 1em;
-      cursor: pointer;
-      transition: 0.25s;
-      width: 100%;
-    }
-
-    .popup button:active {
-      transform: scale(0.97);
-      background: linear-gradient(90deg, #008cff, #004ecc);
-    }
-
-    .loading {
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 15px;
-      margin-top: 20px;
-    }
-
-    .spinner {
-      border: 4px solid rgba(255, 255, 255, 0.2);
-      border-top: 4px solid #00aaff;
-      border-radius: 50%;
-      width: 50px;
-      height: 50px;
-      animation: spin 1s linear infinite;
-    }
-
-    @keyframes spin {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
-
-    .vpn-warning {
-      display: none;
-      margin-top: 15px;
-      font-size: 0.95em;
-      color: #ffcc00;
-      animation: fadeIn 0.5s ease;
-    }
-
-    footer {
-      position: absolute;
-      bottom: 10px;
-      font-size: 0.8em;
-      color: rgba(255,255,255,0.4);
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 20px;
+      padding: 35px 20px;
       text-align: center;
       width: 100%;
+      max-width: 320px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(18px);
+      animation: scaleIn 0.4s ease forwards;
     }
 
-    @media (max-height: 600px) {
-      img { margin-bottom: 30px; }
-      .play-btn { padding: 14px 50px; font-size: 1.1em; }
+    @keyframes scaleIn {
+      from { transform: scale(0.9); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .popup h3 {
+      font-family: "BenzinBold", "Inter", sans-serif;
+      font-size: clamp(18px, 5vw, 22px);
+      margin-bottom: 10px;
+      background: linear-gradient(135deg, #ffe176, #ff5858);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .popup p {
+      font-size: clamp(14px, 4vw, 16px);
+      color: #ddd;
+      margin-bottom: 25px;
+    }
+
+    .popup .tg-button {
+      font-size: clamp(14px, 4.5vw, 17px);
+      padding: 12px 26px;
     }
   </style>
 </head>
 <body>
+  <!-- Прелоадер -->
+  <div id="preloader">
+    <div class="plane"></div>
+    <div class="loading-text">Загрузка Aviamasters...</div>
+  </div>
 
-  <img src="https://luckybear.fun//_next/static/media/home_logo.a028b260.png" alt="LuckyBear Logo">
-  <button class="play-btn" id="playButton">ИГРАТЬ</button>
+  <div class="container" id="mainContent">
+    <div class="video-section">
+      <video id="promoVideo" preload="auto" poster="image/preview.png" playsinline>
+        <source src="video/promo.mp4" type="video/mp4">
+        Ваш браузер не поддерживает видео.
+      </video>
+    </div>
+
+    <button class="play-button" id="playBtn">ИСПЫТАТЬ УДАЧУ</button>
+
+    <h2>НАЧНИ ИГРАТЬ</h2>
+    <a href="https://t.me/+Y5OisneeTDI2NTky" target="_blank" class="tg-button">Перейти в Telegram</a>
+  </div>
 
   <div class="popup" id="popup">
-    <div class="popup-content" id="popupContent">
-      <h2>ДЛЯ ИГРЫ НУЖЕН VPN</h2>
-      <div class="popup-buttons" id="popupButtons">
-        <button id="continueBtn">ПРОДОЛЖИТЬ</button>
-        <button id="vpnBtn">СКАЧАТЬ VPN</button>
-      </div>
-
-      <div class="loading" id="loading">
-        <div class="spinner"></div>
-        <p>Переходим на сайт...</p>
-        <div class="vpn-warning" id="vpnWarning">
-          Без VPN вряд ли загрузится...<br>
-          <button id="installVpnBtn">Установить VPN</button>
-        </div>
-      </div>
+    <div class="popup-content">
+      <h3>💰 Вы могли выиграть 241 250 ₽!</h3>
+      <p>Попробуй прямо сейчас — удача может быть на твоей стороне.</p>
+      <a href="https://t.me/+Y5OisneeTDI2NTky" target="_blank" class="tg-button">Испытать удачу</a>
+      <a href="https://lb333.me/0Z8t7o" target="_blank" class="tg-button">Зайти на сайт</a>
     </div>
   </div>
 
-  <footer>© 2025 LuckyBear.fun</footer>
-
   <script>
-    const playButton = document.getElementById('playButton');
+    const video = document.getElementById('promoVideo');
+    const playBtn = document.getElementById('playBtn');
     const popup = document.getElementById('popup');
-    const continueBtn = document.getElementById('continueBtn');
-    const vpnBtn = document.getElementById('vpnBtn');
-    const loading = document.getElementById('loading');
-    const popupButtons = document.getElementById('popupButtons');
-    const vpnWarning = document.getElementById('vpnWarning');
-    const installVpnBtn = document.getElementById('installVpnBtn');
+    const preloader = document.getElementById('preloader');
+    const mainContent = document.getElementById('mainContent');
 
-    playButton.addEventListener('click', () => {
-      popup.classList.add('active');
-    });
-
-    continueBtn.addEventListener('click', () => {
-      popupButtons.style.display = 'none';
-      loading.style.display = 'flex';
-
-      // имитация загрузки
+    // Ждём полной загрузки контента
+    window.addEventListener('load', () => {
+      // Даем браузеру чуть прогрузить видео и шрифт
       setTimeout(() => {
-        vpnWarning.style.display = 'block';
-      }, 3000);
-
-      // перенаправление на сайт
-      window.location.href = "https://lb333.me/0Z8t7o";
+        preloader.classList.add('hidden');
+        mainContent.classList.add('visible');
+        // Принудительно загружаем превью, если видео не сразу доступно
+        video.load();
+      }, 500);
     });
 
-    vpnBtn.addEventListener('click', () => {
-      window.location.href = "https://t.me/neovpnbot?start=493703188";
-    });
-
-    installVpnBtn.addEventListener('click', () => {
-      window.location.href = "https://t.me/neovpnbot?start=493703188";
+    // Кнопка "Испытать удачу"
+    playBtn.addEventListener('click', () => {
+      if (navigator.vibrate) navigator.vibrate(100);
+      playBtn.style.display = 'none';
+      video.muted = false;
+      video.play().catch(() => {
+        // если браузер блокирует автоплей — разрешим со звуком вручную
+        video.muted = true;
+        video.play();
+      });
+      setTimeout(() => popup.classList.add('active'), 13000);
     });
   </script>
-
 </body>
 </html>
